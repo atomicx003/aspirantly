@@ -10,6 +10,7 @@ import {
   BookOpen,
   Target,
   ListChecks,
+  MessagesSquare,
   Shield,
   LogOut,
   Menu,
@@ -27,6 +28,7 @@ const NAV: NavItem[] = [
   { to: "/analytics", label: "Analytics", icon: BarChart3 },
   { to: "/mocks", label: "Mock Tests", icon: Target },
   { to: "/tasks", label: "Tasks & Notes", icon: ListChecks },
+  { to: "/doubts", label: "Doubt Corner", icon: MessagesSquare },
   { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
 ];
 
