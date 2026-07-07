@@ -13,6 +13,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedTimerRouteImport } from './routes/_authenticated/timer'
+import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/tasks'
 import { Route as AuthenticatedSyllabusRouteImport } from './routes/_authenticated/syllabus'
 import { Route as AuthenticatedMocksRouteImport } from './routes/_authenticated/mocks'
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
@@ -36,6 +37,11 @@ const IndexRoute = IndexRouteImport.update({
 const AuthenticatedTimerRoute = AuthenticatedTimerRouteImport.update({
   id: '/timer',
   path: '/timer',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedTasksRoute = AuthenticatedTasksRouteImport.update({
+  id: '/tasks',
+  path: '/tasks',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedSyllabusRoute = AuthenticatedSyllabusRouteImport.update({
@@ -73,6 +79,7 @@ export interface FileRoutesByFullPath {
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/mocks': typeof AuthenticatedMocksRoute
   '/syllabus': typeof AuthenticatedSyllabusRoute
+  '/tasks': typeof AuthenticatedTasksRoute
   '/timer': typeof AuthenticatedTimerRoute
 }
 export interface FileRoutesByTo {
@@ -83,6 +90,7 @@ export interface FileRoutesByTo {
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/mocks': typeof AuthenticatedMocksRoute
   '/syllabus': typeof AuthenticatedSyllabusRoute
+  '/tasks': typeof AuthenticatedTasksRoute
   '/timer': typeof AuthenticatedTimerRoute
 }
 export interface FileRoutesById {
@@ -95,6 +103,7 @@ export interface FileRoutesById {
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/mocks': typeof AuthenticatedMocksRoute
   '/_authenticated/syllabus': typeof AuthenticatedSyllabusRoute
+  '/_authenticated/tasks': typeof AuthenticatedTasksRoute
   '/_authenticated/timer': typeof AuthenticatedTimerRoute
 }
 export interface FileRouteTypes {
@@ -107,6 +116,7 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/mocks'
     | '/syllabus'
+    | '/tasks'
     | '/timer'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -117,6 +127,7 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/mocks'
     | '/syllabus'
+    | '/tasks'
     | '/timer'
   id:
     | '__root__'
@@ -128,6 +139,7 @@ export interface FileRouteTypes {
     | '/_authenticated/leaderboard'
     | '/_authenticated/mocks'
     | '/_authenticated/syllabus'
+    | '/_authenticated/tasks'
     | '/_authenticated/timer'
   fileRoutesById: FileRoutesById
 }
@@ -165,6 +177,13 @@ declare module '@tanstack/react-router' {
       path: '/timer'
       fullPath: '/timer'
       preLoaderRoute: typeof AuthenticatedTimerRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/tasks': {
+      id: '/_authenticated/tasks'
+      path: '/tasks'
+      fullPath: '/tasks'
+      preLoaderRoute: typeof AuthenticatedTasksRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/syllabus': {
@@ -211,6 +230,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
   AuthenticatedMocksRoute: typeof AuthenticatedMocksRoute
   AuthenticatedSyllabusRoute: typeof AuthenticatedSyllabusRoute
+  AuthenticatedTasksRoute: typeof AuthenticatedTasksRoute
   AuthenticatedTimerRoute: typeof AuthenticatedTimerRoute
 }
 
@@ -220,6 +240,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
   AuthenticatedMocksRoute: AuthenticatedMocksRoute,
   AuthenticatedSyllabusRoute: AuthenticatedSyllabusRoute,
+  AuthenticatedTasksRoute: AuthenticatedTasksRoute,
   AuthenticatedTimerRoute: AuthenticatedTimerRoute,
 }
 
