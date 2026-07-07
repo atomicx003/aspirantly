@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+Disallow: /dashboard
+Disallow: /timer
+Disallow: /syllabus
+Disallow: /analytics
+Disallow: /mocks
+Disallow: /tasks
+Disallow: /leaderboard
+Disallow: /admin
