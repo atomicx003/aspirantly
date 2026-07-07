@@ -18,7 +18,6 @@ import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedSyllabusRouteImport } from './routes/_authenticated/syllabus'
 import { Route as AuthenticatedMocksRouteImport } from './routes/_authenticated/mocks'
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
-import { Route as AuthenticatedDoubtsRouteImport } from './routes/_authenticated/doubts'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -68,11 +67,6 @@ const AuthenticatedLeaderboardRoute =
     path: '/leaderboard',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedDoubtsRoute = AuthenticatedDoubtsRouteImport.update({
-  id: '/doubts',
-  path: '/doubts',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -96,7 +90,6 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRoute
   '/analytics': typeof AuthenticatedAnalyticsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/doubts': typeof AuthenticatedDoubtsRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/mocks': typeof AuthenticatedMocksRoute
   '/syllabus': typeof AuthenticatedSyllabusRoute
@@ -110,7 +103,6 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminRoute
   '/analytics': typeof AuthenticatedAnalyticsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/doubts': typeof AuthenticatedDoubtsRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/mocks': typeof AuthenticatedMocksRoute
   '/syllabus': typeof AuthenticatedSyllabusRoute
@@ -126,7 +118,6 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/analytics': typeof AuthenticatedAnalyticsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
-  '/_authenticated/doubts': typeof AuthenticatedDoubtsRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/mocks': typeof AuthenticatedMocksRoute
   '/_authenticated/syllabus': typeof AuthenticatedSyllabusRoute
@@ -142,7 +133,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/analytics'
     | '/dashboard'
-    | '/doubts'
     | '/leaderboard'
     | '/mocks'
     | '/syllabus'
@@ -156,7 +146,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/analytics'
     | '/dashboard'
-    | '/doubts'
     | '/leaderboard'
     | '/mocks'
     | '/syllabus'
@@ -171,7 +160,6 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/analytics'
     | '/_authenticated/dashboard'
-    | '/_authenticated/doubts'
     | '/_authenticated/leaderboard'
     | '/_authenticated/mocks'
     | '/_authenticated/syllabus'
@@ -251,13 +239,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLeaderboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/doubts': {
-      id: '/_authenticated/doubts'
-      path: '/doubts'
-      fullPath: '/doubts'
-      preLoaderRoute: typeof AuthenticatedDoubtsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -286,7 +267,6 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedAnalyticsRoute: typeof AuthenticatedAnalyticsRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
-  AuthenticatedDoubtsRoute: typeof AuthenticatedDoubtsRoute
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
   AuthenticatedMocksRoute: typeof AuthenticatedMocksRoute
   AuthenticatedSyllabusRoute: typeof AuthenticatedSyllabusRoute
@@ -298,7 +278,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedAnalyticsRoute: AuthenticatedAnalyticsRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
-  AuthenticatedDoubtsRoute: AuthenticatedDoubtsRoute,
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
   AuthenticatedMocksRoute: AuthenticatedMocksRoute,
   AuthenticatedSyllabusRoute: AuthenticatedSyllabusRoute,
@@ -318,3 +297,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
