@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      chapter_links: {
+        Row: {
+          chapter_key: string
+          created_at: string
+          id: string
+          kind: string
+          title: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          chapter_key: string
+          created_at?: string
+          id?: string
+          kind: string
+          title: string
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          chapter_key?: string
+          created_at?: string
+          id?: string
+          kind?: string
+          title?: string
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
       chapter_progress: {
         Row: {
           chapter_key: string
@@ -62,6 +92,36 @@ export type Database = {
         }
         Relationships: []
       }
+      custom_chapters: {
+        Row: {
+          chapter_key: string
+          cls: string
+          created_at: string
+          id: string
+          name: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          chapter_key: string
+          cls?: string
+          created_at?: string
+          id?: string
+          name: string
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          chapter_key?: string
+          cls?: string
+          created_at?: string
+          id?: string
+          name?: string
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       doubt_answers: {
         Row: {
           body: string
@@ -100,6 +160,7 @@ export type Database = {
           chapter: string | null
           created_at: string
           id: string
+          image_url: string | null
           resolved: boolean
           subject: string
           title: string
@@ -110,6 +171,7 @@ export type Database = {
           chapter?: string | null
           created_at?: string
           id?: string
+          image_url?: string | null
           resolved?: boolean
           subject?: string
           title: string
@@ -120,6 +182,7 @@ export type Database = {
           chapter?: string | null
           created_at?: string
           id?: string
+          image_url?: string | null
           resolved?: boolean
           subject?: string
           title?: string
@@ -196,18 +259,21 @@ export type Database = {
           display_name: string
           id: string
           target_exam: string
+          theme: string
         }
         Insert: {
           created_at?: string
           display_name?: string
           id: string
           target_exam?: string
+          theme?: string
         }
         Update: {
           created_at?: string
           display_name?: string
           id?: string
           target_exam?: string
+          theme?: string
         }
         Relationships: []
       }
