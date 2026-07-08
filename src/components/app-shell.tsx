@@ -66,9 +66,7 @@ export function AppShell() {
   const SidebarInner = (
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-2 px-5 py-5 font-black">
-        <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary text-primary-foreground">
-          R
-        </span>
+        <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary text-primary-foreground">A</span>
         <span>Aspirantly</span>
       </div>
       <nav className="flex-1 space-y-1 px-3">
@@ -124,9 +122,7 @@ export function AppShell() {
       {/* Mobile top bar */}
       <div className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-sidebar/90 px-4 py-3 backdrop-blur lg:hidden">
         <div className="flex items-center gap-2 font-black">
-          <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary text-primary-foreground">
-            R
-          </span>
+          <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary text-primary-foreground">A</span>
           Aspirantly
         </div>
         <Button size="icon" variant="ghost" onClick={() => setOpen(true)}>

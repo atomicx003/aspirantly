@@ -28,9 +28,7 @@ function Landing() {
     <div className="min-h-screen bg-background text-foreground">
       <header className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5">
         <div className="flex items-center gap-2 font-black tracking-tight">
-          <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary text-primary-foreground">
-            R
-          </span>
+          <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary text-primary-foreground">A</span>
           <span className="text-lg">Aspirantly</span>
         </div>
         <Link to="/auth">
