@@ -215,3 +215,7 @@ export const ALL_CHAPTERS: ChapterEntry[] = SYLLABUS.flatMap((g) => g.chapters);
 export function chaptersForSubject(subject: SubjectKey): ChapterEntry[] {
   return ALL_CHAPTERS.filter((c) => c.subject === subject);
 }
+
+export function makeChapterKey(subject: SubjectKey, cls: "11" | "12", name: string) {
+  return `${SUBJECT_META[subject].short.toLowerCase()}-${cls}-${slug(name)}`;
+}
