@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useRouterState, useNavigate, Outlet } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -10,6 +10,8 @@ import {
   BookOpen,
   Target,
   ListChecks,
+  MessageCircleQuestion,
+  Settings,
   Shield,
   LogOut,
   Menu,
@@ -17,6 +19,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { applyTheme, loadStoredTheme, storeTheme } from "@/lib/theme";
 
 type NavItem = { to: string; label: string; icon: typeof LayoutDashboard };
 
