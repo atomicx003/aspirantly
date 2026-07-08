@@ -6,8 +6,8 @@ import {
   SYLLABUS,
   SUBJECT_ORDER,
   SUBJECT_META,
-  chaptersForSubject,
   type SubjectKey,
+  type ChapterEntry,
 } from "@/lib/syllabus";
 import {
   Accordion,
@@ -16,7 +16,6 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Progress } from "@/components/ui/progress";
 import { FileText, Youtube } from "lucide-react";
 import { toast } from "sonner";
 
@@ -29,10 +28,18 @@ interface ProgressRow {
   theory_done: boolean;
   dpp_done: boolean;
 }
-interface ResourceRow {
+interface LinkRow {
+  id: string;
   chapter_key: string;
-  notes_url: string | null;
-  video_url: string | null;
+  kind: "pdf" | "video";
+  title: string;
+  url: string;
+}
+interface CustomChapter {
+  chapter_key: string;
+  name: string;
+  subject: string;
+  cls: string;
 }
 
 function Syllabus() {
@@ -49,14 +56,26 @@ function Syllabus() {
     },
   });
 
-  const { data: resources = [] } = useQuery({
-    queryKey: ["resources"],
+  const { data: links = [] } = useQuery({
+    queryKey: ["chapter-links"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("chapter_resources")
-        .select("chapter_key, notes_url, video_url");
+        .from("chapter_links")
+        .select("id, chapter_key, kind, title, url")
+        .order("created_at", { ascending: true });
       if (error) throw error;
-      return (data ?? []) as ResourceRow[];
+      return (data ?? []) as LinkRow[];
+    },
+  });
+
+  const { data: custom = [] } = useQuery({
+    queryKey: ["custom-chapters"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("custom_chapters")
+        .select("chapter_key, name, subject, cls");
+      if (error) throw error;
+      return (data ?? []) as CustomChapter[];
     },
   });
 
@@ -66,11 +85,48 @@ function Syllabus() {
     return m;
   }, [progress]);
 
-  const resMap = useMemo(() => {
-    const m = new Map<string, ResourceRow>();
-    resources.forEach((r) => m.set(r.chapter_key, r));
+  const linksByChapter = useMemo(() => {
+    const m = new Map<string, LinkRow[]>();
+    links.forEach((l) => {
+      const arr = m.get(l.chapter_key) ?? [];
+      arr.push(l);
+      m.set(l.chapter_key, arr);
+    });
     return m;
-  }, [resources]);
+  }, [links]);
+
+  // Merge static + custom chapters into groups keyed by subject/class
+  const groups = useMemo(() => {
+    const base = SYLLABUS.map((g) => ({
+      subject: g.subject,
+      cls: g.cls,
+      chapters: [...g.chapters] as ChapterEntry[],
+    }));
+    custom.forEach((c) => {
+      const grp = base.find(
+        (g) => g.subject === c.subject && g.cls === c.cls,
+      );
+      const entry: ChapterEntry = {
+        key: c.chapter_key,
+        name: c.name,
+        subject: c.subject as SubjectKey,
+        cls: c.cls as "11" | "12",
+      };
+      if (grp) grp.chapters.push(entry);
+      else
+        base.push({
+          subject: c.subject as SubjectKey,
+          cls: c.cls as "11" | "12",
+          chapters: [entry],
+        });
+    });
+    return base;
+  }, [custom]);
+
+  const allChapters = useMemo(
+    () => groups.flatMap((g) => g.chapters),
+    [groups],
+  );
 
   async function toggle(key: string, field: "theory_done" | "dpp_done", value: boolean) {
     const { data: u } = await supabase.auth.getUser();
@@ -94,7 +150,7 @@ function Syllabus() {
   }
 
   function subjectPct(subject: SubjectKey) {
-    const chs = chaptersForSubject(subject);
+    const chs = allChapters.filter((c) => c.subject === subject);
     const totalUnits = chs.length * 2;
     let done = 0;
     chs.forEach((c) => {
@@ -145,62 +201,65 @@ function Syllabus() {
             {subject}
           </h2>
           <Accordion type="multiple">
-            {SYLLABUS.filter((g) => g.subject === subject).map((g) => (
-              <AccordionItem key={g.cls} value={`${subject}-${g.cls}`}>
-                <AccordionTrigger className="text-sm font-semibold">
-                  Class {g.cls}
-                  <span className="ml-auto mr-2 text-xs font-normal text-muted-foreground">
-                    {g.chapters.length} chapters
-                  </span>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-2">
-                    {g.chapters.map((c) => {
-                      const p = progMap.get(c.key);
-                      const res = resMap.get(c.key);
-                      return (
-                        <div
-                          key={c.key}
-                          className="rounded-xl border border-border bg-secondary/40 p-3"
-                        >
-                          <p className="text-sm font-medium">{c.name}</p>
-                          <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-2">
-                            <label className="flex cursor-pointer items-center gap-2 text-xs">
-                              <Checkbox
-                                checked={!!p?.theory_done}
-                                onCheckedChange={(v) =>
-                                  toggle(c.key, "theory_done", !!v)
-                                }
-                              />
-                              Theory & Concepts
-                            </label>
-                            <label className="flex cursor-pointer items-center gap-2 text-xs">
-                              <Checkbox
-                                checked={!!p?.dpp_done}
-                                onCheckedChange={(v) => toggle(c.key, "dpp_done", !!v)}
-                              />
-                              DPP & PYQs
-                            </label>
-                            <div className="ml-auto flex gap-2">
-                              <ResLink
-                                url={res?.notes_url}
-                                icon={FileText}
-                                label="Notes PDF"
-                              />
-                              <ResLink
-                                url={res?.video_url}
-                                icon={Youtube}
-                                label="Video"
-                              />
+            {groups
+              .filter((g) => g.subject === subject)
+              .sort((a, b) => a.cls.localeCompare(b.cls))
+              .map((g) => (
+                <AccordionItem key={g.cls} value={`${subject}-${g.cls}`}>
+                  <AccordionTrigger className="text-sm font-semibold">
+                    Class {g.cls}
+                    <span className="ml-auto mr-2 text-xs font-normal text-muted-foreground">
+                      {g.chapters.length} chapters
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-2">
+                      {g.chapters.map((c) => {
+                        const p = progMap.get(c.key);
+                        const chLinks = linksByChapter.get(c.key) ?? [];
+                        return (
+                          <div
+                            key={c.key}
+                            className="rounded-xl border border-border bg-secondary/40 p-3"
+                          >
+                            <p className="text-sm font-medium">{c.name}</p>
+                            <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-2">
+                              <label className="flex cursor-pointer items-center gap-2 text-xs">
+                                <Checkbox
+                                  checked={!!p?.theory_done}
+                                  onCheckedChange={(v) =>
+                                    toggle(c.key, "theory_done", !!v)
+                                  }
+                                />
+                                Theory & Concepts
+                              </label>
+                              <label className="flex cursor-pointer items-center gap-2 text-xs">
+                                <Checkbox
+                                  checked={!!p?.dpp_done}
+                                  onCheckedChange={(v) => toggle(c.key, "dpp_done", !!v)}
+                                />
+                                DPP & PYQs
+                              </label>
                             </div>
+                            {chLinks.length > 0 && (
+                              <div className="mt-2 flex flex-wrap gap-2">
+                                {chLinks.map((l) => (
+                                  <ResLink
+                                    key={l.id}
+                                    url={l.url}
+                                    icon={l.kind === "pdf" ? FileText : Youtube}
+                                    label={l.title}
+                                  />
+                                ))}
+                              </div>
+                            )}
                           </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
+                        );
+                      })}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
           </Accordion>
         </div>
       ))}
@@ -213,16 +272,10 @@ function ResLink({
   icon: Icon,
   label,
 }: {
-  url: string | null | undefined;
+  url: string;
   icon: typeof FileText;
   label: string;
 }) {
-  if (!url)
-    return (
-      <span className="inline-flex items-center gap-1 rounded-lg border border-dashed border-border px-2 py-1 text-[11px] text-muted-foreground/60">
-        <Icon className="h-3 w-3" /> {label}
-      </span>
-    );
   return (
     <a
       href={url}
