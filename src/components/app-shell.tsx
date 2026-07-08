@@ -30,7 +30,9 @@ const NAV: NavItem[] = [
   { to: "/analytics", label: "Analytics", icon: BarChart3 },
   { to: "/mocks", label: "Mock Tests", icon: Target },
   { to: "/tasks", label: "Tasks & Notes", icon: ListChecks },
+  { to: "/doubts", label: "Doubts", icon: MessageCircleQuestion },
   { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
+  { to: "/settings", label: "Settings", icon: Settings },
 ];
 
 export function AppShell() {
