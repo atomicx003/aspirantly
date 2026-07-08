@@ -58,6 +58,17 @@ export function AppShell() {
     },
   });
 
+  const profileTheme = profile?.profile?.theme;
+  useEffect(() => {
+    if (profileTheme && profileTheme !== loadStoredTheme()) {
+      storeTheme(profileTheme);
+    } else {
+      applyTheme(loadStoredTheme());
+    }
+  }, [profileTheme]);
+
+
+
   async function signOut() {
     await queryClient.cancelQueries();
     queryClient.clear();
