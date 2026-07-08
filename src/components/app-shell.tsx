@@ -69,7 +69,7 @@ export function AppShell() {
         <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary text-primary-foreground">
           R
         </span>
-        <span>RankUp</span>
+        <span>Aspirantly</span>
       </div>
       <nav className="flex-1 space-y-1 px-3">
         {nav.map((item) => {
@@ -127,7 +127,7 @@ export function AppShell() {
           <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary text-primary-foreground">
             R
           </span>
-          RankUp
+          Aspirantly
         </div>
         <Button size="icon" variant="ghost" onClick={() => setOpen(true)}>
           <Menu className="h-5 w-5" />

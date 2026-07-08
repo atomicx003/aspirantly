@@ -79,14 +79,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "RankUp Planner — JEE & NEET Study Command Center" },
+      { title: "Aspirantly — JEE & NEET Study Command Center" },
       {
         name: "description",
         content:
           "Track study time, streaks, syllabus, mock tests and climb the nationwide leaderboard. The distraction-free productivity app for JEE & NEET aspirants.",
       },
-      { name: "author", content: "RankUp Planner" },
-      { property: "og:title", content: "RankUp Planner — JEE & NEET Study Command Center" },
+      { name: "author", content: "Aspirantly" },
+      { property: "og:title", content: "Aspirantly — JEE & NEET Study Command Center" },
       {
         property: "og:description",
         content:

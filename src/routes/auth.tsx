@@ -84,7 +84,7 @@ function AuthPage() {
           <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary text-primary-foreground">
             R
           </span>
-          <span className="text-lg">RankUp Planner</span>
+          <span className="text-lg">Aspirantly</span>
         </div>
         <h1 className="text-2xl font-bold">
           {mode === "login" ? "Welcome back" : "Create your account"}

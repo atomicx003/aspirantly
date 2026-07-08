@@ -31,7 +31,7 @@ function Landing() {
           <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary text-primary-foreground">
             R
           </span>
-          <span className="text-lg">RankUp</span>
+          <span className="text-lg">Aspirantly</span>
         </div>
         <Link to="/auth">
           <Button variant="secondary">Sign in</Button>
