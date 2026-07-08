@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useRouterState, useNavigate, Outlet } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -10,6 +10,8 @@ import {
   BookOpen,
   Target,
   ListChecks,
+  MessageCircleQuestion,
+  Settings,
   Shield,
   LogOut,
   Menu,
@@ -17,6 +19,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { applyTheme, loadStoredTheme, storeTheme } from "@/lib/theme";
 
 type NavItem = { to: string; label: string; icon: typeof LayoutDashboard };
 
@@ -27,7 +30,9 @@ const NAV: NavItem[] = [
   { to: "/analytics", label: "Analytics", icon: BarChart3 },
   { to: "/mocks", label: "Mock Tests", icon: Target },
   { to: "/tasks", label: "Tasks & Notes", icon: ListChecks },
+  { to: "/doubts", label: "Doubts", icon: MessageCircleQuestion },
   { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
+  { to: "/settings", label: "Settings", icon: Settings },
 ];
 
 export function AppShell() {
@@ -53,6 +58,17 @@ export function AppShell() {
     },
   });
 
+  const profileTheme = profile?.profile?.theme;
+  useEffect(() => {
+    if (profileTheme && profileTheme !== loadStoredTheme()) {
+      storeTheme(profileTheme);
+    } else {
+      applyTheme(loadStoredTheme());
+    }
+  }, [profileTheme]);
+
+
+
   async function signOut() {
     await queryClient.cancelQueries();
     queryClient.clear();
@@ -66,10 +82,8 @@ export function AppShell() {
   const SidebarInner = (
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-2 px-5 py-5 font-black">
-        <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary text-primary-foreground">
-          R
-        </span>
-        <span>RankUp</span>
+        <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary text-primary-foreground">A</span>
+        <span>Aspirantly</span>
       </div>
       <nav className="flex-1 space-y-1 px-3">
         {nav.map((item) => {
@@ -124,10 +138,8 @@ export function AppShell() {
       {/* Mobile top bar */}
       <div className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-sidebar/90 px-4 py-3 backdrop-blur lg:hidden">
         <div className="flex items-center gap-2 font-black">
-          <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary text-primary-foreground">
-            R
-          </span>
-          RankUp
+          <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary text-primary-foreground">A</span>
+          Aspirantly
         </div>
         <Button size="icon" variant="ghost" onClick={() => setOpen(true)}>
           <Menu className="h-5 w-5" />
