@@ -38,7 +38,7 @@ function NotFoundComponent() {
 }
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
-  console.error(error);
+  console.error("Root error boundary:", error);
   const router = useRouter();
   useEffect(() => {
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
@@ -51,7 +51,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           This page didn't load
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+          {error?.message || "Something went wrong on our end."}
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -129,17 +129,25 @@ function RootComponent() {
   const router = useRouter();
 
   useEffect(() => {
-    applyTheme(loadStoredTheme());
+    try {
+      applyTheme(loadStoredTheme());
+    } catch (err) {
+      console.error("Theme error:", err);
+    }
   }, []);
 
   useEffect(() => {
-    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
-      if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED")
-        return;
-      router.invalidate();
-      if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
-    });
-    return () => sub.subscription.unsubscribe();
+    try {
+      const { data: sub } = supabase.auth.onAuthStateChange((event) => {
+        if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED")
+          return;
+        router.invalidate();
+        if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
+      });
+      return () => sub.subscription.unsubscribe();
+    } catch (err) {
+      console.error("Auth state change error:", err);
+    }
   }, [router, queryClient]);
 
   return (
