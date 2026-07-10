@@ -61,18 +61,7 @@ function AuthPage() {
     }
   }
 
-  async function handleGoogle() {
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
-    if (result.error) {
-      toast.error("Google sign-in failed. Try again.");
-      return;
-    }
-    if (result.redirected) return;
-    navigate({ to: "/dashboard" });
-  }
-
+  
   return (
     <div className="flex min-h-screen items-center justify-center px-4 py-10">
       <div
@@ -95,14 +84,6 @@ function AuthPage() {
             : "Start tracking your path to a top rank."}
         </p>
 
-        <Button
-          type="button"
-          variant="outline"
-          className="mt-6 w-full"
-          onClick={handleGoogle}
-        >
-          Continue with Google
-        </Button>
 
         <div className="my-5 flex items-center gap-3 text-xs text-muted-foreground">
           <div className="h-px flex-1 bg-border" /> or <div className="h-px flex-1 bg-border" />
