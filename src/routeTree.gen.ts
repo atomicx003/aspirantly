@@ -17,6 +17,7 @@ import { Route as AuthenticatedTimerRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/tasks'
 import { Route as AuthenticatedSyllabusRouteImport } from './routes/_authenticated/syllabus'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedResourcesRouteImport } from './routes/_authenticated/resources'
 import { Route as AuthenticatedMocksRouteImport } from './routes/_authenticated/mocks'
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedDoubtsRouteImport } from './routes/_authenticated/doubts'
@@ -63,6 +64,11 @@ const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedResourcesRoute = AuthenticatedResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedMocksRoute = AuthenticatedMocksRouteImport.update({
   id: '/mocks',
   path: '/mocks',
@@ -105,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/doubts': typeof AuthenticatedDoubtsRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/mocks': typeof AuthenticatedMocksRoute
+  '/resources': typeof AuthenticatedResourcesRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/syllabus': typeof AuthenticatedSyllabusRoute
   '/tasks': typeof AuthenticatedTasksRoute
@@ -120,6 +127,7 @@ export interface FileRoutesByTo {
   '/doubts': typeof AuthenticatedDoubtsRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/mocks': typeof AuthenticatedMocksRoute
+  '/resources': typeof AuthenticatedResourcesRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/syllabus': typeof AuthenticatedSyllabusRoute
   '/tasks': typeof AuthenticatedTasksRoute
@@ -137,6 +145,7 @@ export interface FileRoutesById {
   '/_authenticated/doubts': typeof AuthenticatedDoubtsRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/mocks': typeof AuthenticatedMocksRoute
+  '/_authenticated/resources': typeof AuthenticatedResourcesRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/syllabus': typeof AuthenticatedSyllabusRoute
   '/_authenticated/tasks': typeof AuthenticatedTasksRoute
@@ -154,6 +163,7 @@ export interface FileRouteTypes {
     | '/doubts'
     | '/leaderboard'
     | '/mocks'
+    | '/resources'
     | '/settings'
     | '/syllabus'
     | '/tasks'
@@ -169,6 +179,7 @@ export interface FileRouteTypes {
     | '/doubts'
     | '/leaderboard'
     | '/mocks'
+    | '/resources'
     | '/settings'
     | '/syllabus'
     | '/tasks'
@@ -185,6 +196,7 @@ export interface FileRouteTypes {
     | '/_authenticated/doubts'
     | '/_authenticated/leaderboard'
     | '/_authenticated/mocks'
+    | '/_authenticated/resources'
     | '/_authenticated/settings'
     | '/_authenticated/syllabus'
     | '/_authenticated/tasks'
@@ -256,6 +268,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/resources': {
+      id: '/_authenticated/resources'
+      path: '/resources'
+      fullPath: '/resources'
+      preLoaderRoute: typeof AuthenticatedResourcesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/mocks': {
       id: '/_authenticated/mocks'
       path: '/mocks'
@@ -308,6 +327,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDoubtsRoute: typeof AuthenticatedDoubtsRoute
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
   AuthenticatedMocksRoute: typeof AuthenticatedMocksRoute
+  AuthenticatedResourcesRoute: typeof AuthenticatedResourcesRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedSyllabusRoute: typeof AuthenticatedSyllabusRoute
   AuthenticatedTasksRoute: typeof AuthenticatedTasksRoute
@@ -321,6 +341,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDoubtsRoute: AuthenticatedDoubtsRoute,
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
   AuthenticatedMocksRoute: AuthenticatedMocksRoute,
+  AuthenticatedResourcesRoute: AuthenticatedResourcesRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedSyllabusRoute: AuthenticatedSyllabusRoute,
   AuthenticatedTasksRoute: AuthenticatedTasksRoute,
