@@ -311,6 +311,7 @@ export type Database = {
         Row: {
           created_at: string
           done: boolean
+          due_on: string | null
           id: string
           priority: string
           title: string
@@ -319,6 +320,7 @@ export type Database = {
         Insert: {
           created_at?: string
           done?: boolean
+          due_on?: string | null
           id?: string
           priority?: string
           title: string
@@ -327,6 +329,7 @@ export type Database = {
         Update: {
           created_at?: string
           done?: boolean
+          due_on?: string | null
           id?: string
           priority?: string
           title?: string
