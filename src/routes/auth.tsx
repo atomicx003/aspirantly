@@ -142,6 +142,14 @@ function AuthPage() {
             <Flame className="h-4 w-4" />
             {loading ? "Please wait…" : mode === "login" ? "Sign in" : "Create account"}
           </Button>
+         {mode === "login" && (
+  <a 
+    href="/forgot-password" 
+    className="text-sm text-blue-500 hover:underline mt-2 block text-center"
+  >
+    Forgot password?
+  </a>
+)}
         </form>
 
         <button
