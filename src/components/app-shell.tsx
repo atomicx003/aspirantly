@@ -8,6 +8,8 @@ import {
   BarChart3,
   Trophy,
   BookOpen,
+  Library,
+  CalendarDays,
   Target,
   ListChecks,
   MessageCircleQuestion,
