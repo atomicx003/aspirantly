@@ -1,20 +1,80 @@
 {
   "name": "Aspirantly",
   "short_name": "Aspirantly",
+  "description": "Your exam preparation companion for JEE and NEET",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#ffffff",
-  "theme_color": "#000000",
-  "icons": [
+  "theme_color": "#0f172a",
+  "screenshots": [
     {
-      "src": "/favicon.ico", 
-      "sizes": "32x32",
-      "type": "image/x-icon"
+      "src": "/screenshot-1.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow"
     },
     {
-      "src": "/favicon.ico", 
+      "src": "/screenshot-2.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
       "sizes": "512x512",
-      "type": "image/x-icon"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["education", "productivity"],
+  "shortcuts": [
+    {
+      "name": "Mock Tests",
+      "short_name": "Mocks",
+      "description": "Access your mock tests",
+      "url": "/mocks",
+      "icons": [
+        {
+          "src": "/icon-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Study Timer",
+      "short_name": "Timer",
+      "description": "Start a study session",
+      "url": "/timer",
+      "icons": [
+        {
+          "src": "/icon-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
     }
   ]
 }
