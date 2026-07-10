@@ -9,11 +9,9 @@ export const ForgotPassword = () => {
   const handleResetRequest = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/update-password`,
-    });
-
+const { error } = await supabase.auth.resetPasswordForEmail(email, {
+  redirectTo: 'https://aspirantly.vercel.app/update-password',
+});
     if (error) {
       toast.error(error.message);
     } else {
