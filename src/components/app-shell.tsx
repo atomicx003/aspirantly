@@ -29,6 +29,8 @@ const NAV: NavItem[] = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/timer", label: "Study Timer", icon: Timer },
   { to: "/syllabus", label: "Syllabus", icon: BookOpen },
+  { to: "/resources", label: "Resources", icon: Library },
+  { to: "/calendar", label: "Calendar", icon: CalendarDays },
   { to: "/analytics", label: "Analytics", icon: BarChart3 },
   { to: "/mocks", label: "Mock Tests", icon: Target },
   { to: "/tasks", label: "Tasks & Notes", icon: ListChecks },
