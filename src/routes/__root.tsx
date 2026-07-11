@@ -102,6 +102,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      {
+        rel: "manifest",
+        href: "https://progressier.app/XLbyYe3HMDF0c0byWZ9j/progressier.json",
+      },
+    ],
+    scripts: [
+      {
+        defer: true,
+        src: "https://progressier.app/XLbyYe3HMDF0c0byWZ9j/script.js",
+      },
     ],
   }),
   shellComponent: RootShell,
