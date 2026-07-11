@@ -22,8 +22,11 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { applyTheme, loadStoredTheme, storeTheme } from "@/lib/theme";
+import logo from "@/assets/aspirantly-logo.png.asset.json";
 
 type NavItem = { to: string; label: string; icon: typeof LayoutDashboard };
+
+const ADMIN_EMAILS = ["aspirantlyhelpdesk@gmail.com", "atomicxaryan@gmail.com"];
 
 const NAV: NavItem[] = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -50,14 +53,16 @@ export function AppShell() {
     queryFn: async () => {
       const { data: u } = await supabase.auth.getUser();
       if (!u.user) return null;
-      const [{ data: p }, { data: roles }] = await Promise.all([
-        supabase.from("profiles").select("*").eq("id", u.user.id).maybeSingle(),
-        supabase.from("user_roles").select("role").eq("user_id", u.user.id),
-      ]);
+      const { data: p } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", u.user.id)
+        .maybeSingle();
+      const email = u.user.email?.toLowerCase() ?? null;
       return {
         profile: p,
         email: u.user.email,
-        isAdmin: !!roles?.some((r) => r.role === "admin"),
+        isAdmin: !!email && ADMIN_EMAILS.includes(email),
       };
     },
   });
@@ -86,7 +91,7 @@ export function AppShell() {
   const SidebarInner = (
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-2 px-5 py-5 font-black">
-        <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary text-primary-foreground">A</span>
+        <img src={logo.url} alt="Aspirantly logo" className="h-9 w-9 rounded-xl object-cover" />
         <span>Aspirantly</span>
       </div>
       <nav className="flex-1 space-y-1 px-3">
@@ -142,7 +147,7 @@ export function AppShell() {
       {/* Mobile top bar */}
       <div className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-sidebar/90 px-4 py-3 backdrop-blur lg:hidden">
         <div className="flex items-center gap-2 font-black">
-          <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary text-primary-foreground">A</span>
+          <img src={logo.url} alt="Aspirantly logo" className="h-8 w-8 rounded-lg object-cover" />
           Aspirantly
         </div>
         <Button size="icon" variant="ghost" onClick={() => setOpen(true)}>

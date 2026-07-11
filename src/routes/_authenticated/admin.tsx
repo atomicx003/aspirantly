@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -32,6 +32,9 @@ export const Route = createFileRoute("/_authenticated/admin")({
   component: Admin,
 });
 
+const ADMIN_EMAILS = ["aspirantlyhelpdesk@gmail.com", "atomicxaryan@gmail.com"];
+
+
 interface LinkRow {
   id: string;
   chapter_key: string;
@@ -49,6 +52,7 @@ interface CustomChapter {
 
 function Admin() {
   const qc = useQueryClient();
+  const navigate = useNavigate();
   const [subject, setSubject] = useState<SubjectKey | "all">("all");
   const [search, setSearch] = useState("");
 
@@ -57,21 +61,26 @@ function Admin() {
   const [ncSubject, setNcSubject] = useState<SubjectKey>("Physics");
   const [ncCls, setNcCls] = useState<"11" | "12">("11");
 
-  const { data: isAdmin } = useQuery({
-    queryKey: ["is-admin"],
+  // Resolve access from the signed-in user's email. `undefined` = still checking.
+  const { data: access } = useQuery({
+    queryKey: ["admin-access"],
+    staleTime: 5 * 60 * 1000,
     queryFn: async () => {
       const { data: u } = await supabase.auth.getUser();
-      if (!u.user) return false;
-      const { data } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", u.user.id);
-      return !!data?.some((r) => r.role === "admin");
+      const email = u.user?.email?.toLowerCase() ?? null;
+      return { allowed: !!email && ADMIN_EMAILS.includes(email) };
     },
   });
+  const allowed = access?.allowed === true;
+
+  useEffect(() => {
+    if (access && !access.allowed) navigate({ to: "/dashboard", replace: true });
+  }, [access, navigate]);
+
 
   const { data: links = [] } = useQuery({
     queryKey: ["chapter-links"],
+    enabled: allowed,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("chapter_links")
@@ -84,6 +93,7 @@ function Admin() {
 
   const { data: custom = [] } = useQuery({
     queryKey: ["custom-chapters"],
+    enabled: allowed,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("custom_chapters")
@@ -144,17 +154,27 @@ function Admin() {
     qc.invalidateQueries({ queryKey: ["chapter-links"] });
   }
 
-  if (isAdmin === false) {
+  // Still resolving access — render nothing to avoid a flicker.
+  if (access === undefined) {
+    return (
+      <div className="flex min-h-[40vh] items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+      </div>
+    );
+  }
+
+  if (!allowed) {
     return (
       <div className="glass-card rounded-2xl p-8 text-center">
         <Shield className="mx-auto h-10 w-10 text-muted-foreground" />
         <h1 className="mt-3 text-xl font-bold">Admin only</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          You need the admin role to manage global resources.
+          You don't have access to this area. Redirecting…
         </p>
       </div>
     );
   }
+
 
   const customKeys = new Set(custom.map((c) => c.chapter_key));
 
