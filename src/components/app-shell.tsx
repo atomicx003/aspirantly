@@ -55,10 +55,11 @@ export function AppShell() {
         supabase.from("profiles").select("*").eq("id", u.user.id).maybeSingle(),
         supabase.from("user_roles").select("role").eq("user_id", u.user.id),
       ]);
+      const email = u.user.email?.toLowerCase() ?? null;
       return {
         profile: p,
         email: u.user.email,
-        isAdmin: !!roles?.some((r) => r.role === "admin"),
+        isAdmin: !!email && ADMIN_EMAILS.includes(email),
       };
     },
   });
