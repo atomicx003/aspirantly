@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { applyTheme, loadStoredTheme } from "@/lib/theme";
+import { registerServiceWorker } from "@/lib/register-sw";
 
 function NotFoundComponent() {
   return (
@@ -141,6 +142,7 @@ function RootComponent() {
     } catch (err) {
       console.error("Theme error:", err);
     }
+    registerServiceWorker();
   }, []);
 
   useEffect(() => {
