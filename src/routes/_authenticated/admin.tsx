@@ -154,17 +154,27 @@ function Admin() {
     qc.invalidateQueries({ queryKey: ["chapter-links"] });
   }
 
-  if (isAdmin === false) {
+  // Still resolving access — render nothing to avoid a flicker.
+  if (access === undefined) {
+    return (
+      <div className="flex min-h-[40vh] items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+      </div>
+    );
+  }
+
+  if (!allowed) {
     return (
       <div className="glass-card rounded-2xl p-8 text-center">
         <Shield className="mx-auto h-10 w-10 text-muted-foreground" />
         <h1 className="mt-3 text-xl font-bold">Admin only</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          You need the admin role to manage global resources.
+          You don't have access to this area. Redirecting…
         </p>
       </div>
     );
   }
+
 
   const customKeys = new Set(custom.map((c) => c.chapter_key));
 
