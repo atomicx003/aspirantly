@@ -26,6 +26,8 @@ import logo from "@/assets/aspirantly-logo.png.asset.json";
 
 type NavItem = { to: string; label: string; icon: typeof LayoutDashboard };
 
+const ADMIN_EMAILS = ["aspirantlyhelpdesk@gmail.com", "atomicxaryan@gmail.com"];
+
 const NAV: NavItem[] = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/timer", label: "Study Timer", icon: Timer },
@@ -51,10 +53,11 @@ export function AppShell() {
     queryFn: async () => {
       const { data: u } = await supabase.auth.getUser();
       if (!u.user) return null;
-      const [{ data: p }, { data: roles }] = await Promise.all([
-        supabase.from("profiles").select("*").eq("id", u.user.id).maybeSingle(),
-        supabase.from("user_roles").select("role").eq("user_id", u.user.id),
-      ]);
+      const { data: p } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", u.user.id)
+        .maybeSingle();
       const email = u.user.email?.toLowerCase() ?? null;
       return {
         profile: p,
