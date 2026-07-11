@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -31,6 +31,9 @@ import { Shield, Search, Plus, Trash2, FileText, Youtube, Save } from "lucide-re
 export const Route = createFileRoute("/_authenticated/admin")({
   component: Admin,
 });
+
+const ADMIN_EMAILS = ["aspirantlyhelpdesk@gmail.com", "atomicxaryan@gmail.com"];
+
 
 interface LinkRow {
   id: string;
