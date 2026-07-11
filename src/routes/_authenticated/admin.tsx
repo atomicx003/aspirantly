@@ -52,6 +52,7 @@ interface CustomChapter {
 
 function Admin() {
   const qc = useQueryClient();
+  const navigate = useNavigate();
   const [subject, setSubject] = useState<SubjectKey | "all">("all");
   const [search, setSearch] = useState("");
 
@@ -60,18 +61,22 @@ function Admin() {
   const [ncSubject, setNcSubject] = useState<SubjectKey>("Physics");
   const [ncCls, setNcCls] = useState<"11" | "12">("11");
 
-  const { data: isAdmin } = useQuery({
-    queryKey: ["is-admin"],
+  // Resolve access from the signed-in user's email. `undefined` = still checking.
+  const { data: access } = useQuery({
+    queryKey: ["admin-access"],
+    staleTime: 5 * 60 * 1000,
     queryFn: async () => {
       const { data: u } = await supabase.auth.getUser();
-      if (!u.user) return false;
-      const { data } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", u.user.id);
-      return !!data?.some((r) => r.role === "admin");
+      const email = u.user?.email?.toLowerCase() ?? null;
+      return { allowed: !!email && ADMIN_EMAILS.includes(email) };
     },
   });
+  const allowed = access?.allowed === true;
+
+  useEffect(() => {
+    if (access && !access.allowed) navigate({ to: "/dashboard", replace: true });
+  }, [access, navigate]);
+
 
   const { data: links = [] } = useQuery({
     queryKey: ["chapter-links"],
