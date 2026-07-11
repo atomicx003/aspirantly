@@ -80,6 +80,7 @@ function Admin() {
 
   const { data: links = [] } = useQuery({
     queryKey: ["chapter-links"],
+    enabled: allowed,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("chapter_links")
@@ -92,6 +93,7 @@ function Admin() {
 
   const { data: custom = [] } = useQuery({
     queryKey: ["custom-chapters"],
+    enabled: allowed,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("custom_chapters")
